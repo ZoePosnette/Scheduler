@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Export
+{% endblock %}
+
+{% block main %}
+<div class="container-md text-center">
+  <div class="row">
+    <div class="col align-self-center">
+    <div id="month_view" class="card text-center shadow">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                <a id="caltext" class="nav-link" href="{{ url_for('view', month_num='#') }}">Month</a>
+                </li>
+                <li class="nav-item">
+                <a id="caltext" class="nav-link" href="{{ url_for('view_week', week_num='#') }}">Week</a>
+                </li>
+                <li class="nav-item">
+                <a id="caltext" class="nav-link active" aria-current="true" class="nav-link" href="#">Export</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+          <h1 id="month" class="display-6 text-center">Export</h1>
+          <p>Select the dates of the schedule you would like to export, and in which format</p>
+          <form action="/export" method="post">
+            <div class="row mb-3 d-flex justify-content-center">
+              <div class="col-4">
+                <select class="form-select" aria-label="Default select example">
+                  <option selected>Select file type</option>
+                  <option value="1">.csv</option>
+                  <option value="2">.ics calendar invite</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="date"><p class="lead">Select date to export from:</p></label>
+                <input type="date" id="holiday_date" name="holiday_date"
+                    min="2018-01-01" max="2030-12-31">
+              </div>
+            </div>
+            <div class="row mb-3 d-flex justify-content-center">
+                <div class="col-4">
+                  <select class="form-select" aria-label="Default select example">
+                    <option selected>Select time period for export</option>
+                    <option value="1">Week</option>
+                    <option value="2">Month</option>
+                    <option value="2">Next three months</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <input class="btn btn-secondary" name= "Submit" type="submit"/>
+              </div>
+
+              {% if export_ready %}
+
+              <button class="btn btn-success">
+                Download
+              </button>
+
+              {% endif %}
+          </form>
+      </div>
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Configure Roster
+{% endblock %}
+
+{% block main %}
+    <div class="container-md text-center">
+        <div class="row">
+            <div class="col align-self-center">
+                <div id="roster" class="card text-center shadow">
+                    <div class="card-body">
+                        <h1 class="display-6">Configure Roster</h1>
+                        <p class="lead">Add new staff to the roster, or edit existing staff member information</p>
+                        <form action="/roster" method="post">
+                        <div class="accordion" id="add_staff">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Add staff to roster
+                                </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+
+                                    <div id="name_contract" class="container text-center">
+                                        <div class="row">
+                                        <div class="col mb-3">
+                                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="staff_name" name="staff_name" placeholder="Staff member's name" type="text">
+                                        </div>
+
+                                        <div class="col input-group mb-3">
+                                            <label class="input-group-text "for="contract">Select contract type:</label>
+                                            <select class="form-select" name="contract" id="contract">
+                                        </div></div></div>
+                                                <option disabled selected>Choose...</option>
+                                                <option value="F">Full time</option>
+                                                <optgroup label="Part time">
+                                                    <option value="P_1">Part time, first half of the week (Monday, Tuesday, Wednesday AM)</option>
+                                                    <option value="P_2">Part time, second half of the week (Wednesday PM, Thursday, Friday)</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                        <div class="mb-3">
+                                            <label for="cando1">Staff member can work shift type 1:</label>
+                                            <input class="form-check-input mt-0" id="cando1" name="cando1" placeholder="Can do shift type 1" type="checkbox", value="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="cando2">Staff member can work shift type 2:</label>
+                                            <input class="form-check-input mt-0" id="cando2" name="cando2" placeholder="Can do shift type 2" type="checkbox", value="2">
+                                        </div>
+                                        <button class="btn btn-success" type="submit">Submit</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                    <table class="table caption-top table-striped">
+                        <caption><strong>Helpdesk</strong></caption>
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" style="width: 20%">Name</th>
+                                <th scope="col">Type of Contract</th>
+                                <th scope="col">Non-working days</th>
+                                <th scope="col">Can work type 1</th>
+                                <th scope="col">Can work type 2</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% for staff in staff %}
+                                <tr>
+                                    <th scope="row">{{ staff['name'] }}</th>
+                                    <td scope="row">
+                                        {% if staff['contract'] == 'F' %}
+                                            Full Time
+                                        {% elif staff['contract'] == 'P' %}
+                                            Part Time
+                                        {% endif %}
+                                    </td>
+                                    <td scope="row">
+                                        {% if staff['nonworking_days'] == None %}
+                                            N/A
+                                        {% else %}
+                                            {{ staff['nonworking_days'] | nicerptdisplay }}
+                                        {% endif %}
+                                    </td>
+                                    <td scope="row">
+                                        {% if staff['cando1'] == 'y' %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                    <td scope="row">
+                                        {% if staff['cando2'] == 'y' %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                    <td scope="row">
+                                        <button type="button" class="btn btn-outline-success btn-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" data-bs-toggle="collapse" data-bs-target="#collapse{{ staff['name'] }}" aria-expanded="false" aria-controls="collapseExample" viewBox="0 0 16 16">
+                                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                            </svg>
+                                        </button>
+                                        <div class="collapse" id="collapse{{ staff['name'] }}">
+                                            <div class="card card-body">
+                                                <div class="mb-3">
+                                                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="staff_name{{ staff['id'] }}" name="staff_name" placeholder="Staff member's name" type="text">
+                                                </div>
+
+                                                <div class="input-group mb-3">
+                                                    <label class="input-group-text "for="contract">Select contract type:</label>
+                                                    <select class="form-select" name="contract" id="contract{{ staff['id'] }}">
+                                                </div>
+                                                        <option disabled selected>Choose...</option>
+                                                        <option value="F">Full time</option>
+                                                        <optgroup label="Part time">
+                                                            <option value="P_1">Part time, first half of the week (Monday, Tuesday, Wednesday AM)</option>
+                                                            <option value="P_2">Part time, second half of the week (Wednesday PM, Thursday, Friday)</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                                    <div class="mb-3">
+                                                        <label for="cando1">Staff member can work shift type 1:</label>
+                                                        <input class="form-check-input mt-0" id="cando1{{ staff['id'] }}" name="cando1" placeholder="Can do shift type 1" type="checkbox" value="1">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="cando2">Staff member can work shift type 2:</label>
+                                                        <input class="form-check-input mt-0" id="cando2{{ staff['id'] }}" name="cando2" placeholder="Can do shift type 2" type="checkbox" value="2">
+                                                    </div>
+                                                    <button class="btn btn-outline-success btn-sm"
+                                                    onClick="updateStaff({{ staff['id'] }},
+                                                    document.getElementById('staff_name' + {{ staff['id'] }}).value,
+                                                    document.getElementById('contract' + {{ staff['id'] }}).value,
+                                                    document.getElementById('cando1' + {{ staff['id'] }}).checked,
+                                                    document.getElementById('cando2' + {{ staff['id'] }}).checked)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                                                        </svg>
+                                                    </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td scope="row">
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onClick="deleteStaff({{ staff['id'] }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708Z"/>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

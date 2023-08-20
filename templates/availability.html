@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Availability
+{% endblock %}
+
+{% block main %}
+<div class="container-md text-center">
+  <div class="row">
+    <div class="col align-self-center">
+      <div id="avail" class="card text-center shadow">
+        <div class="card-body">
+      <form action="/availability" method="post">
+      <div class="container-sm">
+          <div class="row gy-2 gx-3 align-items-center justify-content-center mb-3">
+
+          <h1 class="display-6">Change days where staff cannot cover a shift.</h1>
+            <br>
+              <div class="col-auto">
+                  <div class="input-group">
+                      <select class="form-select form-select-sm" name="staff" id="staff">
+                          {% if not person %}
+                              <option selected disabled hidden>
+                                  {% if person %}
+                                      Change staff member:
+                                  {% else %}
+                                      Select staff member:
+                                  {% endif %}
+                              </option>
+                          {% endif %}
+                          {% for name in list %}
+                              {% if name["name"] == person %}
+                              <option selected>{{ name["name"] }}</option>
+                              {% else %}
+                              <option value="{{ name['name'] }}">{{ name["name"] }}</option>
+                              {% endif %}
+                          {% endfor%}
+                      </select>
+                      <button class="btn btn-secondary" type="submit">Submit</button>
+                  </div>
+              </div>
+              <div class="col-auto">
+                  <input type="date" id="add_date" name="add_date"
+                  min="2018-01-01" max="2030-12-31">
+                  <button class="btn btn-secondary" type="submit" class="btn btn-primary-sm">Add Date</button>
+              </div>
+              <div class="col-auto">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault full_day" id="full_day">
+                    <label class="form-check-label" for="full_day">
+                      Full day
+                    </label>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault part_dayA" id="part_dayA">
+                    <label class="form-check-label" for="part_dayA">
+                      Part day AM
+                    </label>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault part_dayP" id="part_dayP">
+                    <label class="form-check-label" for="part_dayP">
+                      Part day PM
+                    </label>
+                  </div>
+                </div>
+          </div>
+
+
+      {% if current_unavailable %}
+          <ul class="list-group list-group-flush">
+              {% for entry in current_unavailable %}
+              <li class ="list-group-item">
+
+              {{ entry['date'] | date }}
+              {% if entry['partdayAM'] == 'y' and entry['partdayPM'] == 'y' %}
+                Full day
+              {% elif entry['partdayAM'] == 'y' %}
+                AM
+              {% elif entry['partdayPM'] == 'y' %}
+                PM
+              {% endif %}
+
+              <button type="submit" class="btn btn-outline-danger btn-sm" name="delete {{ entry['id'] }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                      <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                  </svg>
+              </button>
+              </li>
+              {% endfor %}
+          </ul>
+      {% endif %}
+      </div>
+      </form>
+    </div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

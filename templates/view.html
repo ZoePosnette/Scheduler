@@ -1,0 +1,400 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    View
+{% endblock %}
+
+{% block main %}
+<div class="container-md text-center">
+  <div class="row">
+    <div class="col align-self-center">
+    <div id="month_view" class="card text-center shadow">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                <a class="nav-link active" aria-current="true" href="#">Month</a>
+                </li>
+                <li class="nav-item">
+                <a id="caltext" class="nav-link" href="{{ url_for('view_week', week_num='#') }}">Week</a>
+                </li>
+                <li class="nav-item">
+                <a id="caltext" class="nav-link" href="/export">Export</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div id= "month_nav" class="container text-md-start">
+                <div class="row align-content-start justify-content-start">
+                    <div class="">
+                        <h1 id="month" class="display-6">{{ month_header }}</h1>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                              <li class="page-item">
+                                <a class="page-link" href="{{ month_header }}prev" aria-label="Previous">
+                                  <span aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                                    </svg>
+                                  </span>
+                                </a>
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link" href="{{ month_header }}next" aria-label="Next">
+                                  <span aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                    </svg>
+                                  </span>
+                                </a>
+                              </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col" >Sun</th>
+                        <th scope="col" >Mon</th>
+                        <th scope="col" >Tue</th>
+                        <th scope="col" >Wed</th>
+                        <th scope="col" >Thu</th>
+                        <th scope="col" >Fri</th>
+                        <th scope="col" >Sat</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in month %}
+                            <tr style="height: 120px;">
+                                {% for day in week %}
+
+                                    {% if day['weekday'] == 0 %}
+                                      {% if day["today"] %}
+                                        <td id="daytoday" style="width: 120px;">
+                                      {% else %}
+                                        <td id="day" style="width: 120px;">
+                                      {% endif %}
+                                            <div class="disabled">
+                                                <div class="day_field_container">
+                                                    <div class="day_field">
+                                                        <h6 id= "{{ day['month_id'] }}"  class="text-md-start mb-2">{{ day['day'] }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="shift_wrapper">
+                                                    {% if day['shifts'] == 'y' %}
+
+                                                      <button id="shift_indicator" class="btn rounded-circle p-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ day['date'] }}" aria-controls="offcanvasExample">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                                        </svg>
+                                                      </button>
+
+                                                      <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ day['date'] }}" aria-labelledby="offcanvasExampleLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ day['date'] | date }}</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <div>
+                                                            {% for shift in day["shift_data"] %}
+                                                            <ul class="list-group">
+                                                                <li class ="list-group-item"><h6>AM 1 : {{ shift["AM_1"] }}</h6></li>
+                                                                <li class ="list-group-item"><h6>AM 2 : {{ shift["AM_2"] }}</h6></li>
+                                                                <li class ="list-group-item"><h6>PM 1 : {{ shift["PM_1"] }}</h6></li>
+                                                                <li class ="list-group-item"><h6>PM 2 : {{ shift["PM_2"] }}</h6></li>
+                                                            </ul>
+                                                            {% endfor %}
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    {% elif day['weekday'] == 1 %}
+                                        {% if day["today"] %}
+                                          <td id="daytoday" style="width: 120px;">
+                                        {% else %}
+                                          <td id="day" style="width: 120px;">
+                                        {% endif %}
+                                            <div class="disabled">
+                                                <div class="day_field_container">
+                                                    <div class="day_field">
+                                                      <h6 id= "{{ day['month_id'] }}"  class="text-md-start mb-2">{{ day['day'] }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="shift_wrapper">
+                                                    {% if day['shifts'] == 'y' %}
+
+                                                      <button id="shift_indicator" class="btn rounded-circle p-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ day['date'] }}" aria-controls="offcanvasExample">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                                        </svg>
+                                                      </button>
+
+                                                      <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ day['date'] }}" aria-labelledby="offcanvasExampleLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ day['date'] | date }}</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <div>
+                                                            {% for shift in day["shift_data"] %}
+                                                            <ul class="list-group">
+                                                              <li class ="list-group-item"><h6>AM 1 : {{ shift["AM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>AM 2 : {{ shift["AM_2"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 1 : {{ shift["PM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 2 : {{ shift["PM_2"] }}</h6></li>
+                                                            </ul>
+                                                            {% endfor %}
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    {% elif day['weekday'] == 2 %}
+                                      {% if day["today"] %}
+                                        <td id="daytoday" style="width: 120px;">
+                                      {% else %}
+                                        <td id="day" style="width: 120px;">
+                                      {% endif %}
+                                            <div class="disabled">
+                                                <div class="day_field_container">
+                                                    <div class="day_field">
+                                                      <h6 id= "{{ day['month_id'] }}"  class="text-md-start mb-2">{{ day['day'] }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="shift_wrapper">
+                                                    {% if day['shifts'] == 'y' %}
+
+                                                      <button id="shift_indicator" class="btn rounded-circle p-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ day['date'] }}" aria-controls="offcanvasExample">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                                        </svg>
+                                                      </button>
+
+                                                      <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ day['date'] }}" aria-labelledby="offcanvasExampleLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ day['date'] | date }}</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <div>
+                                                            {% for shift in day["shift_data"] %}
+                                                            <ul class="list-group">
+                                                              <li class ="list-group-item"><h6>AM 1 : {{ shift["AM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>AM 2 : {{ shift["AM_2"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 1 : {{ shift["PM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 2 : {{ shift["PM_2"] }}</h6></li>
+                                                            </ul>
+                                                            {% endfor %}
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    {% elif day['weekday'] == 3 %}
+                                      {% if day["today"] %}
+                                        <td id="daytoday" style="width: 120px;">
+                                      {% else %}
+                                        <td id="day" style="width: 120px;">
+                                      {% endif %}
+                                            <div class="disabled">
+                                                <div class="day_field_container">
+                                                    <div class="day_field">
+                                                      <h6 id= "{{ day['month_id'] }}"  class="text-md-start mb-2">{{ day['day'] }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="shift_wrapper">
+                                                    {% if day['shifts'] == 'y' %}
+
+                                                      <button id="shift_indicator" class="btn rounded-circle p-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ day['date'] }}" aria-controls="offcanvasExample">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                                        </svg>
+                                                      </button>
+
+                                                      <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ day['date'] }}" aria-labelledby="offcanvasExampleLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ day['date'] | date }}</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <div>
+                                                            {% for shift in day["shift_data"] %}
+                                                            <ul class="list-group">
+                                                              <li class ="list-group-item"><h6>AM 1 : {{ shift["AM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>AM 2 : {{ shift["AM_2"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 1 : {{ shift["PM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 2 : {{ shift["PM_2"] }}</h6></li>
+                                                            </ul>
+                                                            {% endfor %}
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    {% elif day['weekday'] == 4 %}
+                                      {% if day["today"] %}
+                                        <td id="daytoday" style="width: 120px;">
+                                      {% else %}
+                                        <td id="day" style="width: 120px;">
+                                      {% endif %}
+                                            <div class="disabled">
+                                                <div class="day_field_container">
+                                                    <div class="day_field">
+                                                      <h6 id= "{{ day['month_id'] }}"  class="text-md-start mb-2">{{ day['day'] }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="shift_wrapper">
+                                                    {% if day['shifts'] == 'y' %}
+
+                                                      <button id="shift_indicator" class="btn rounded-circle p-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ day['date'] }}" aria-controls="offcanvasExample">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                                        </svg>
+                                                      </button>
+
+                                                      <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ day['date'] }}" aria-labelledby="offcanvasExampleLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ day['date'] | date }}</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <div>
+                                                            {% for shift in day["shift_data"] %}
+                                                            <ul class="list-group">
+                                                              <li class ="list-group-item"><h6>AM 1 : {{ shift["AM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>AM 2 : {{ shift["AM_2"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 1 : {{ shift["PM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 2 : {{ shift["PM_2"] }}</h6></li>
+                                                            </ul>
+                                                            {% endfor %}
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    {% elif day['weekday'] == 5 %}
+                                      {% if day["today"] %}
+                                        <td id="daytoday" style="width: 120px;">
+                                      {% else %}
+                                        <td id="day" style="width: 120px;">
+                                      {% endif %}
+                                            <div class="disabled">
+                                                <div class="day_field_container">
+                                                    <div class="day_field">
+                                                      <h6 id= "{{ day['month_id'] }}"  class="text-md-start mb-2">{{ day['day'] }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="shift_wrapper">
+                                                    {% if day['shifts'] == 'y' %}
+
+                                                      <buttonid="shift_indicator" class="btn rounded-circle p-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ day['date'] }}" aria-controls="offcanvasExample">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                                        </svg>
+                                                      </button>
+
+                                                      <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ day['date'] }}" aria-labelledby="offcanvasExampleLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ day['date'] | date }}</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <div>
+                                                            {% for shift in day["shift_data"] %}
+                                                            <ul class="list-group">
+                                                              <li class ="list-group-item"><h6>AM 1 : {{ shift["AM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>AM 2 : {{ shift["AM_2"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 1 : {{ shift["PM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 2 : {{ shift["PM_2"] }}</h6></li>
+                                                            </ul>
+                                                            {% endfor %}
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    {% elif day['weekday'] == 6 %}
+                                      {% if day["today"] %}
+                                        <td id="daytoday" style="width: 120px;">
+                                      {% else %}
+                                        <td id="day" style="width: 120px;">
+                                      {% endif %}
+                                            <div class="disabled">
+                                                <div class="day_field_container">
+                                                    <div class="day_field">
+                                                      <h6 id= "{{ day['month_id'] }}"  class="text-md-start mb-2">{{ day['day'] }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="shift_wrapper">
+                                                    {% if day['shifts'] == 'y' %}
+
+                                                      <button id="shift_indicator" class="btn rounded-circle p-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ day['date'] }}" aria-controls="offcanvasExample">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                                        </svg>
+                                                      </button>
+
+                                                      <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ day['date'] }}" aria-labelledby="offcanvasExampleLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ day['date'] | date }}</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <div>
+                                                            {% for shift in day["shift_data"] %}
+                                                            <ul class="list-group">
+                                                              <li class ="list-group-item"><h6>AM 1 : {{ shift["AM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>AM 2 : {{ shift["AM_2"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 1 : {{ shift["PM_1"] }}</h6></li>
+                                                              <li class ="list-group-item"><h6>PM 2 : {{ shift["PM_2"] }}</h6></li>
+                                                            </ul>
+                                                            {% endfor %}
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    {% endif %}
+
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}

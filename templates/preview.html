@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Preview
+{% endblock %}
+
+{% block main %}
+<div class="container-md text-center">
+    <div class="row">
+      <div class="col align-self-center">
+        <div id="preview" class="card text-center shadow">
+            <div class="card-body mb-3">
+                <h1 class="display-6">Preview</h1>
+                <br>
+                <h6 class="card-title">You have scheduled {{ days_to_schedule }} days. This is a total of {{ total_work_weeks }} work week{% if total_work_weeks > 1 %}s{% endif %}</h6>
+                <div class="col align-self-center">
+                    <h6 class="card-title">Shift splits per staff member:</h6>
+                            {% for person in totals %}
+                                {{ person["name"]}}: {{ person["shifts"] }}
+                            {% endfor %}
+                </div>
+                <br>
+
+        <form action="/create" method="post">
+                <div class="row gx-3">
+                    <div class="col mb-3">
+                    <label class="form-label">Would you like to proceed?</label>
+                    <input class="btn btn-success" name="Confirm" type="submit" value="Confirm"/>
+                    </div>
+                    <div class="col mb-3">
+                    <label>Re-schedule for same dates</label>
+                    <input class="btn btn-secondary" name="redo" type="submit" value="Redo"/>
+                    </div>
+                    <div class="col mb-3">
+                    <label>Select different dates</label>
+                    <input class="btn btn-secondary" name="dates" type="submit" value="Change dates"/>
+                    </div>
+                </div>
+
+
+        <div class="overflow-y-scroll" style="max-height: 500px;">
+        {% for count, week in schedule | enumerate %}
+        <table class="table caption-top table-striped-columns table-bordered">
+            <caption><strong>Week {{ count + 1 }}</strong></caption>
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" style="width: 20%;">Date</th>
+                    <th scope="col" style="width: 20%;">AM 1</th>
+                    <th scope="col" style="width: 20%;">AM 2</th>
+                    <th scope="col" style="width: 20%;">PM 1</th>
+                    <th scope="col" style="width: 20%;">PM 2</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                    {% for day in week %}
+                    <tr>
+                        <td scope="row">{{ day["date"] | date }}</td>
+                        <td scope="row">{{ day["AM_1"] }}</td>
+                        <td scope="row">{{ day["AM_2"] }}</td>
+                        <td scope="row">{{ day["PM_1"] }}</td>
+                        <td scope="row">{{ day["PM_2"] }}</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        {% endfor %}
+        </div>
+        <br>
+    </form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}

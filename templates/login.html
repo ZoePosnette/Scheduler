@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<div class="container-sm text-center" style="max-width: 600px;">
+    <div class="row">
+        <div class="col align-self-center">
+            <div id="roster" class="card text-center shadow">
+                <div class="p-4 card-body">
+                    <img id="landing_title" src="static/Scheduler.png"/>
+                    <div class="text-center w-75 m-auto">
+                        <h4 class="text-dark-50 text-center mt-0 fw-bold">Sign In</h4>
+                        <p class="text-muted mb-4">Enter your username and password</p>
+                    </div>
+                    <form action="/login" method="post">
+                        <div class="mb-3">
+                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                        </div>
+                        <br>
+                        <button class="btn btn-secondary" type="submit">Log In</button>
+                    </form>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div class="mb-3">
+                <a class="text-muted ms-1" href="/reset_password">Forgotten your password?</a>
+                <p class="text-muted">Don't have an account? <a class="text-muted ms-1" href="/register">Register</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

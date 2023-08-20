@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Schedule
+{% endblock %}
+
+{% block main %}
+
+    <h1>Submitted successfully</h1>
+    <h2>{{ days_to_schedule }} days to schedule</h2>
+    <h2>{{ total_work_weeks }} total work weeks</h2>
+
+    <h4>You just scheduled:</h4>
+    <table action="/submitted" class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>AM 1</th>
+                <th>AM 2</th>
+                <th>PM 1</th>
+                <th>PM 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in just_scheduled %}
+                <tr>
+                    <td>{{ row["date"] }}</td>
+                    <td>{{ row["AM_1"] }}</td>
+                    <td>{{ row["AM_2"] }}</td>
+                    <td>{{ row["PM_1"] }}</td>
+                    <td>{{ row["PM_2"] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

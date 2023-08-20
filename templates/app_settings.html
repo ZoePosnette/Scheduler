@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Application settings
+{% endblock %}
+
+{% block main %}
+
+<div class="container-md text-center">
+    <div class="row">
+        <div class="col align-self-center">
+            <div id="roster" class="card text-center shadow">
+                <div class="card-body">
+                  {% if is_admin == 1 %}
+                    <h1 class="display-6">Application settings</h1>
+                    <br>
+                    <div class="accordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseTwo">
+                            Change public holidays
+                          </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+
+                            <form action="/app_settings" method="post">
+                              <div class="mb-3">
+                                <label for="date"><p class="lead">Select date to add:</p></label>
+                                <input type="date" id="holiday_date" name="holiday_date"
+                                    min="2018-01-01" max="2030-12-31">
+                                </div>
+                                <div class="d-flex justify-content-center mb-3">
+                                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Holiday Name" style="max-width:50%;">
+                                </div>
+                                <div class="mb-3">
+                                <input class="btn btn-secondary" name= "Submit" type="submit"/>
+                                </div>
+                            </form>
+                            <br>
+                            <strong>Current public holidays</strong>
+                              <div class="container text-center">
+                                <div class="row justify-content-center">
+                                  <div class="col-3 align-self-center">
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"> Date </th>
+                                                <th scope="col"> Name </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for date in current_holidays %}
+                                                <tr>
+                                                    {% for item in date %}
+                                                      {% if item != "id" %}
+                                                        {% if item == "date" %}
+                                                        <td>{{ date[item] | date }}</td>
+                                                        {% endif %}
+                                                        {% if item != "date" %}
+                                                        <td> {{ date[item] }}</td>
+                                                        {% endif %}
+                                                      {% endif %}
+                                                    {% endfor %}
+                                                    <td>
+                                                      <button type="button" class="btn btn-outline-danger btn-sm" onClick="deleteHoliday({{ date['id'] }})">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                                                          <path d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z"/>
+                                                          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
+                                                          <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z"/>
+                                                        </svg>
+                                                      </button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Configure shift patterns
+                          </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
+                            Inclusion of weekends and public holidays
+                          </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
+                            Configure part time working patterns
+                          </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                          </div>
+                        </div>
+                      </div>
+                    {% else %}
+                    <h1 class="display-6">Access denied. Please contact an administrator</h1>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
